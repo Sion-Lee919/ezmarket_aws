@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="ezmarket.BoardMapper">
+  <select id="getItemDetail" resultType="boarddto" parameterType="int">
+
+  	select p.*, b.brandname
+  	from product p
+  	join brand b on b.brand_id = p.brand_id
+  	where product_id=#{product_id}
+
+  </select>
+  
+	<update id="viewCount">
+		UPDATE product 
+		SET view_count = view_count + 1 
+		WHERE product_id = #{product_id}
+	</update>
+  
+  <select id="getAllItems" resultType="boarddto" >
+  	select *
+  	from product
+  </select>
+  
+  <select id="getBrandItems" resultType="boarddto" parameterType="int">
+  select p.*, b.brandname, b.calculated_money, b.calculating_money, b.calculate_possible
+  from product p 
+  join brand b on b.brand_id = p.brand_id
+  where p.brand_id=#{brand_id}
+  </select>
+  
+  <insert id="registerItem" parameterType="boarddto">
+    INSERT INTO product 
+    (product_id, brand_id, name, description, alcohol, volume, price, stock_quantity, created_at, update_date, product_ingredient, product_region, bigcategory, subcategory, sweetness, sourness, carbonation, body, image_url) 
+    VALUES 
+    (#{product_id}, #{brand_id}, #{name}, #{description}, #{alcohol}, #{volume}, #{price}, #{stock_quantity}, SYSDATE, SYSDATE, #{product_ingredient}, #{product_region}, #{bigcategory}, #{subcategory},#{sweetness}, #{sourness}, #{carbonation}, #{body}, #{image_url})
+  </insert>
+  
+  <update id="updateItem" parameterType="boarddto">
+        update product
+        set
+        name = #{name},
+        description = #{description},
+		alcohol = #{alcohol},
+		volume = #{volume},
+		price = #{price},
+		stock_quantity = #{stock_quantity},
+		product_ingredient = #{product_ingredient},
+		update_date = sysdate,
+		product_region = #{product_region},
+		bigcategory = #{bigcategory},
+		subcategory = #{subcategory},
+		sweetness = #{sweetness},
+	    sourness = #{sourness},
+	    carbonation = #{carbonation},
+	    body = #{body},
+		image_url = #{image_url}
+        where product_id = #{product_id}
+    </update>
+  
+  	<delete id="deleteItem" parameterType="int">
+    	delete from product where product_id = #{product_id}
+	</delete>
+
+<!-- 필터기능 -->
+<select id="getFilteredItems" resultType="boarddto">
+    SELECT p.*, 
+       COALESCE(v.view_count, 0) AS view_count,
+       COALESCE(r.avg_rating, 0) AS avg_rating,
+       COALESCE(r.review_count, 0) AS review_count,
+       (COALESCE(v.view_count, 0) * 0.4) + 
+       (COALESCE(r.avg_rating, 0) * 20 * 0.3) + 
+       (COALESCE(r.review_count, 0) * 5 * 0.2) + 
+       (COALESCE(r.recent_review_score, 0) * 0.1) AS popularity_score 
+		FROM product p
+		--조회수 0.4, 평균평점 0.3, 리뷰개수 0.2, 최근 리뷰반영 0.1
+		LEFT JOIN (
+		    -- 조회수 계산
+		    SELECT product_id, SUM(view_count) AS view_count
+		    FROM product
+		    GROUP BY product_id
+		) v ON p.product_id = v.product_id
+		
+		LEFT JOIN (
+		    -- 평점, 리뷰 개수, 최근 트렌드 반영
+		    SELECT r.product_id, 
+		           AVG(r.rating) AS avg_rating, 
+		           COUNT(r.review_id) AS review_count,
+		           SUM(CASE 
+		                WHEN r.review_date >= TRUNC(SYSDATE) - 7 THEN 3  
+		                WHEN r.review_date >= TRUNC(SYSDATE) - 30 THEN 2  
+		                ELSE 1 
+		           END) AS recent_review_score
+		    FROM review r
+		    GROUP BY r.product_id
+		) r ON p.product_id = r.product_id
+		
+		WHERE 1=1
+
+	<if test="searchKeyword != null and searchKeyword != ''">
+	    AND (p.name LIKE '%' || #{searchKeyword} || '%' OR p.description LIKE '%' || #{searchKeyword} || '%')
+	</if>
+	<if test="bigcategory != null and bigcategory != ''">
+	    AND p.bigcategory = #{bigcategory}
+	</if>
+	<if test="subcategories != null and subcategories.size() > 0">
+	    <foreach item="sub" collection="subcategories" open="AND (" separator=" AND " close=")">
+	        p.subcategory = #{sub}
+	    </foreach>
+	</if>
+	
+	<if test="regions != null and regions.size() > 0">
+	    <foreach item="region" collection="regions" open="AND (" separator=" OR " close=")">
+	        p.product_region LIKE '%' || #{region} || '%'
+	    </foreach>
+	</if>
+	
+	<if test="newProduct != null and newProduct">
+	    AND p.created_at >= ADD_MONTHS(TRUNC(SYSDATE), -3)
+	</if>
+
+
+    <if test="sweetnesss != null and sweetnesss.size() > 0">
+        <foreach item="s" collection="sweetnesss" open="AND p.sweetness IN (" separator="," close=")">
+            #{s}
+        </foreach>
+    </if>
+
+ 
+    <if test="sournesss != null and sournesss.size() > 0">
+        <foreach item="s" collection="sournesss" open="AND p.sourness IN (" separator="," close=")">
+            #{s}
+        </foreach>
+    </if>
+
+ 
+    <if test="carbonations != null and carbonations.size() > 0">
+        <foreach item="c" collection="carbonations" open="AND p.carbonation IN (" separator="," close=")">
+            #{c}
+        </foreach>
+    </if>
+
+
+    <if test="bodys != null and bodys.size() > 0">
+        <foreach item="b" collection="bodys" open="AND p.body IN (" separator="," close=")">
+            #{b}
+        </foreach>
+    </if>
+
+	<choose>
+	    <when test="sortType == 'latest'">
+	        ORDER BY p.created_at ASC
+	    </when>
+	    <when test="sortType == 'oldest'">
+	        ORDER BY p.created_at DESC
+	    </when>
+	    <when test="sortType == 'lowPrice'">
+	        ORDER BY p.price ASC
+	    </when>
+	    <when test="sortType == 'highPrice'">
+	        ORDER BY p.price DESC
+	    </when>
+	    <when test="sortType == 'popular'">
+	        ORDER BY popularity_score DESC
+	    </when>
+	    <otherwise>
+	        ORDER BY p.created_at DESC
+	    </otherwise>
+	</choose>
+	
+	<if test="limit != null and offset != null">
+	    OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+	</if>
+
+</select>
+
+<!-- 필터 페이지네이션 -->
+<select id="getFilteredItemsCount" resultType="int">
+    SELECT COUNT(*) FROM product
+    WHERE 1=1
+    
+    <if test="searchKeyword != null and searchKeyword != ''">
+        AND (name LIKE '%' || #{searchKeyword} || '%' OR description LIKE '%' || #{searchKeyword} || '%')
+    </if>
+    <if test="bigcategory != null and bigcategory != ''">
+        AND bigcategory = #{bigcategory}
+    </if>
+    <if test="subcategories != null and subcategories.size() > 0">
+        <foreach item="sub" collection="subcategories" open="AND (" separator=" AND " close=")">
+            subcategory = #{sub}
+        </foreach>
+    </if>
+
+    <if test="regions != null and regions.size() > 0">
+        <foreach item="region" collection="regions" open="AND (" separator=" OR " close=")">
+            product_region LIKE '%' || #{region} || '%'
+        </foreach>
+    </if>
+
+    <if test="newProduct != null and newProduct">
+        AND created_at >= ADD_MONTHS(SYSDATE, -3)
+    </if>
+    
+    <if test="sweetnesss != null and sweetnesss.size() > 0">
+        <foreach item="s" collection="sweetnesss" open="AND sweetness IN (" separator="," close=")">
+            #{s}
+        </foreach>
+    </if>
+
+ 
+    <if test="sournesss != null and sournesss.size() > 0">
+        <foreach item="s" collection="sournesss" open="AND sourness IN (" separator="," close=")">
+            #{s}
+        </foreach>
+    </if>
+
+ 
+    <if test="carbonations != null and carbonations.size() > 0">
+        <foreach item="c" collection="carbonations" open="AND carbonation IN (" separator="," close=")">
+            #{c}
+        </foreach>
+    </if>
+
+
+    <if test="bodys != null and bodys.size() > 0">
+        <foreach item="b" collection="bodys" open="AND body IN (" separator="," close=")">
+            #{b}
+        </foreach>
+    </if>
+</select>
+
+<select id='getsearchItems' resultType="boarddto">
+	select name FROM product
+	WHERE 1=1
+	
+	<if test="searchKeyword != null and searchKeyword != ''">
+        AND (name LIKE '%' || #{searchKeyword} || '%' OR description LIKE '%' || #{searchKeyword} || '%')
+    </if>
+</select>
+
+
+<!--브랜드 필터기능 -->
+<select id="getBrand" resultType="boarddto">
+    SELECT * FROM product
+    WHERE 1=1
+    
+    <if test="brand_id != null">
+        AND brand_id = #{brand_id}
+    </if>
+    
+    <if test="searchKeyword != null and searchKeyword != ''">
+        AND (name LIKE '%' || #{searchKeyword} || '%' OR description LIKE '%' || #{searchKeyword} || '%')
+    </if>
+    <if test="bigcategory != null and bigcategory != ''">
+        AND bigcategory = #{bigcategory}
+    </if>
+    <if test="subcategories != null and subcategories.size() > 0">
+        <foreach item="sub" collection="subcategories" open="AND (" separator=" AND " close=")">
+            subcategory = #{sub}
+        </foreach>
+    </if>
+
+    <if test="regions != null and regions.size() > 0">
+        <foreach item="region" collection="regions" open="AND (" separator=" OR " close=")">
+            product_region LIKE '%' || #{region} || '%'
+        </foreach>
+    </if>
+
+    <if test="newProduct != null and newProduct">
+        AND created_at >= ADD_MONTHS(SYSDATE, -3)
+    </if>
+    
+    <choose>
+        <when test="sortType == 'latest'">
+            ORDER BY created_at ASC
+        </when>
+        <when test="sortType == 'oldest'">
+            ORDER BY created_at DESC
+        </when>
+        <when test="sortType == 'lowPrice'">
+            ORDER BY price ASC
+        </when>
+        <when test="sortType == 'highPrice'">
+            ORDER BY price DESC
+        </when>
+        <otherwise>
+            ORDER BY created_at DESC
+        </otherwise>
+    </choose>
+    
+    <if test="limit != null and offset != null">
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </if>
+</select>
+
+<!-- 브랜드 필터 페이지네이션 -->
+<select id="getBrandItemsCount" resultType="int">
+    SELECT COUNT(*) FROM product
+    WHERE 1=1
+    
+    <if test="brand_id != null">
+        AND brand_id = #{brand_id}
+    </if>
+    
+    <if test="searchKeyword != null and searchKeyword != ''">
+        AND (name LIKE '%' || #{searchKeyword} || '%' OR description LIKE '%' || #{searchKeyword} || '%')
+    </if>
+    <if test="bigcategory != null and bigcategory != ''">
+        AND bigcategory = #{bigcategory}
+    </if>
+    <if test="subcategories != null and subcategories.size() > 0">
+        <foreach item="sub" collection="subcategories" open="AND (" separator=" AND " close=")">
+            subcategory = #{sub}
+        </foreach>
+    </if>
+
+    <if test="regions != null and regions.size() > 0">
+        <foreach item="region" collection="regions" open="AND (" separator=" OR " close=")">
+            product_region LIKE '%' || #{region} || '%'
+        </foreach>
+    </if>
+
+    <if test="newProduct != null and newProduct">
+        AND created_at >= ADD_MONTHS(SYSDATE, -3)
+    </if>
+</select>
+
+<select id="getItemsByType" resultType="boarddto">
+    SELECT * FROM (
+        -- 인기순 8개
+        SELECT 'popular' AS category, 
+            p.product_id, p.name, p.price, p.created_at, p.image_url, p.brand_id,
+            COALESCE(v.view_count, 0) AS view_count, 
+            COALESCE(r.avg_rating, 0) AS avg_rating, 
+            COALESCE(r.review_count, 0) AS review_count, 
+            (COALESCE(v.view_count, 0) * 0.4) + 
+            (COALESCE(r.avg_rating, 0) * 20 * 0.3) + 
+            (COALESCE(r.review_count, 0) * 5 * 0.2) + 
+            (COALESCE(r.recent_review_score, 0) * 0.1) AS popularity_score
+        FROM product p
+        LEFT JOIN (
+            SELECT product_id, SUM(view_count) AS view_count
+            FROM product
+            GROUP BY product_id
+        ) v ON p.product_id = v.product_id
+        LEFT JOIN (
+            SELECT r.product_id, 
+                AVG(r.rating) AS avg_rating, 
+                COUNT(r.review_id) AS review_count,
+                SUM(CASE 
+                    WHEN r.review_date >= TRUNC(SYSDATE) - 7 THEN 3  
+                    WHEN r.review_date >= TRUNC(SYSDATE) - 30 THEN 2  
+                    ELSE 1 
+                END) AS recent_review_score
+            FROM review r
+            GROUP BY r.product_id
+        ) r ON p.product_id = r.product_id
+        ORDER BY popularity_score DESC
+        FETCH FIRST 8 ROWS ONLY
+    ) 
+
+    UNION ALL
+
+    SELECT * FROM (
+        -- 최신순 8개
+        SELECT 'new' AS category, 
+            p.product_id, p.name, p.price, p.created_at, p.image_url, p.brand_id, 
+            0 AS view_count, 
+            0 AS avg_rating, 
+            0 AS review_count, 
+            0 AS popularity_score  -- 인기순과 컬럼 개수 맞추기
+        FROM product p
+        ORDER BY p.created_at ASC
+        FETCH FIRST 8 ROWS ONLY
+    )
+
+    UNION ALL
+
+    SELECT * FROM (
+        -- 랜덤 8개
+        SELECT 'random' AS category, 
+            p.product_id, p.name, p.price, p.created_at, p.image_url, p.brand_id, 
+            0 AS view_count, 
+            0 AS avg_rating, 
+            0 AS review_count, 
+            0 AS popularity_score  -- 인기순과 컬럼 개수 맞추기
+        FROM product p
+        ORDER BY DBMS_RANDOM.VALUE
+        FETCH FIRST 8 ROWS ONLY
+    )
+</select>
+
+
+
+
+
+
+
+
+</mapper>

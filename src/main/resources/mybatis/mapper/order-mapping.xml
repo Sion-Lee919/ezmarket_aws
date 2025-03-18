@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ezmarket.OrderMapper">
+
+    <resultMap id="orderDTOResultMap" type="OrderDTO">
+        <id column="ORDER_ID" property="orderId"/>
+        <result column="MEMBER_ID" property="memberId"/>
+        <result column="ORDER_DATE" property="orderDate"/>
+        <result column="TOTAL_AMOUNT" property="totalAmount"/>
+        <result column="STATUS" property="status"/>
+        <result column="SHIPPING_MESSAGE" property="shippingMessage"/>
+        <result column="SHIPPING_ADDRESS" property="shippingAddress"/>
+        <result column="RECEIVER_NAME" property="receiverName"/>
+        <result column="RECEIVER_PHONE" property="receiverPhone"/>
+        <result column="RECEIVER_EMAIL" property="receiverEmail"/>
+        <result column="PAYMENT_METHOD" property="paymentMethod"/>
+        <result column="USED_POINTS" property="usedPoints"/>
+        <result column="PRODUCT_INFO" property="productInfo" javaType="java.util.ArrayList" jdbcType="VARCHAR" typeHandler="ezmarket.OrderProductTypeHandler"/>
+    </resultMap>
+
+    <insert id="insertOrder" parameterType="OrderDTO">
+        INSERT INTO orders (MEMBER_ID, PRODUCT_INFO, TOTAL_AMOUNT, STATUS, SHIPPING_ADDRESS, SHIPPING_MESSAGE, PAYMENT_METHOD, RECEIVER_NAME, RECEIVER_PHONE, RECEIVER_EMAIL, ORDER_DATE, USED_POINTS)
+        VALUES (#{memberId}, #{productInfo, typeHandler=ezmarket.OrderProductTypeHandler}, #{totalAmount}, '처리 중', #{shippingAddress}, #{shippingMessage}, #{paymentMethod}, #{receiverName}, #{receiverPhone}, #{receiverEmail}, SYSDATE, #{usedPoints})
+    </insert>
+
+    <select id="getOrdersByMemberId" resultMap="orderDTOResultMap">
+        SELECT * FROM orders WHERE MEMBER_ID = #{memberId} ORDER BY ORDER_ID DESC
+    </select>
+
+    <select id="getLastOrderByMemberId" resultMap="orderDTOResultMap" parameterType="int">
+        SELECT * FROM orders WHERE MEMBER_ID = #{memberId} ORDER BY ORDER_ID DESC FETCH FIRST 1 ROW ONLY
+    </select>
+
+    <select id="getOrderByMemberIdAndOrderId" resultMap="orderDTOResultMap">
+        SELECT * FROM orders WHERE MEMBER_ID = #{memberId} AND ORDER_ID = #{orderId}
+    </select>
+    
+
+    <!-- Member Part -->
+	<select id="getOrderCountByStatus" resultType="int">
+        select count(*) from orders where status = #{status} and member_id = #{member_id}
+    </select>
+    
+    <update id="calculateRequest">
+    	UPDATE brand SET calculate_possible = calculate_possible - #{request_money}, calculating_money = calculating_money + #{request_money} where brand_id = #{brand_id}
+    </update>
+    
+    <update id="calculateRefuse">
+    	UPDATE brand SET calculate_possible = calculate_possible + #{request_money}, calculating_money = calculating_money - #{request_money} where brand_id = #{brand_id}
+    </update>
+    
+    <update id="calculateSuccess">
+    	UPDATE brand SET calculated_money = calculated_money + #{request_money}, calculating_money = calculating_money - #{request_money} where brand_id = #{brand_id}
+    </update>
+
+    <update id="updateOrderStatus">
+        UPDATE orders SET STATUS = #{status} WHERE ORDER_ID = #{orderId}
+    </update>
+
+</mapper>

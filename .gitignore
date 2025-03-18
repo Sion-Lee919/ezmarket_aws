@@ -1,0 +1,37 @@
+###  STS4 / Maven / Java 관련 불필요한 파일 제외 ###
+/target/
+/.classpath
+/.project
+/.settings/
+/bin/
+/.mvn/
+mvnw
+mvnw.cmd
+pom.xml.tag
+pom.xml.releaseBackup
+dependency-reduced-pom.xml
+release.properties
+target/
+logs/
+*.log
+*.tmp
+hs_err_pid*
+*.swp
+.DS_Store
+Thumbs.db
+
+###  React 관련 불필요한 파일 제외 ###
+/frontend/node_modules/
+node_modules/
+/frontend/build/
+/build/
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+### 보안 파일 제외 ###
+/src/main/resources/application.properties
+/src/main/resources/application.yml
+/src/main/resources/application-dev.properties
+/src/main/resources/application-prod.properties
