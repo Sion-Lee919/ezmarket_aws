@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {"ezmarket", "google", "com.ezmarket.config"})
 @MapperScan(basePackages = {"ezmarket", "google"})
 
-public class EzmarketApplication {
+public class EzmarketApplication  {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EzmarketApplication.class, args);
