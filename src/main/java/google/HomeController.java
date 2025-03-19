@@ -18,7 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api")
 public class HomeController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
     private final UserService userService;
@@ -31,7 +31,7 @@ public class HomeController {
     public RedirectView home(@AuthenticationPrincipal OAuth2User user) {
         if (user == null) {
             logger.info("User is null, redirecting to login page.");
-            return new RedirectView("http://localhost:3000/login");
+            return new RedirectView("http://13.208.47.23:8911/login");
         }
         
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -43,7 +43,7 @@ public class HomeController {
         
         System.out.println(" HomeController에서 saveUser() 호출");
         userService.saveUser(user, provider);
-        return new RedirectView("http://localhost:3000/home"); // 로그인 후 리디렉트
+        return new RedirectView("http://13.208.47.23:8911/home"); // 로그인 후 리디렉트
     }
     
     @GetMapping("/user")

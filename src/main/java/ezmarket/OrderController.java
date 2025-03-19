@@ -22,7 +22,7 @@ import com.ezmarket.cookie.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/buy")
+@RequestMapping("/api/buy")
 public class OrderController {
 
     @Autowired
