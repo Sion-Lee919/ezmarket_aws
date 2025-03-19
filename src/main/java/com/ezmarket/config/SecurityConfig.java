@@ -49,7 +49,7 @@ public class SecurityConfig {
             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("http://localhost:3000/", true)
+                .defaultSuccessUrl("http://13.208.47.23:8911", true)
                 .successHandler((request, response, authentication) -> {
                 	OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
                     String provider = authToken.getAuthorizedClientRegistrationId();        
@@ -68,7 +68,7 @@ public class SecurityConfig {
     	            response.addCookie(sessionCookie);
 
                     response.setHeader("Authorization", "Bearer " + token);  
-                    response.sendRedirect("http://localhost:3000/");
+                    response.sendRedirect("http://13.208.47.23:8911");
                 })
             );
         
