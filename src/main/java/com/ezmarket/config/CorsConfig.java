@@ -9,7 +9,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-public class CorsConfig  {
+public class CorsConfig   {
 
     public CorsConfig() {
         System.out.println("CorsConfig: CORS 설정이 로딩됨."); 
