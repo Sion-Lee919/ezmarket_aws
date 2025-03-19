@@ -33,7 +33,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 
 @RestController
-//@RequestMapping("/api/board") 푸쉬테스
+//@RequestMapping("/api/board") 푸쉬테스트
 public class BoardController {
 	
 	@Autowired
