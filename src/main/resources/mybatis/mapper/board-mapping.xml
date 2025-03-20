@@ -357,9 +357,10 @@
             GROUP BY r.product_id
         ) r ON p.product_id = r.product_id
         ORDER BY popularity_score DESC
-        FETCH FIRST 8 ROWS ONLY
+        --FETCH FIRST 8 ROWS ONLY
     ) 
-
+    where rownum between 1 and 8
+    
     UNION ALL
 
     SELECT * FROM (
@@ -372,8 +373,9 @@
             0 AS popularity_score  -- 인기순과 컬럼 개수 맞추기
         FROM product p
         ORDER BY p.created_at ASC
-        FETCH FIRST 8 ROWS ONLY
+        --FETCH FIRST 8 ROWS ONLY
     )
+    where rownum between 1 and 8
 
     UNION ALL
 
@@ -387,8 +389,9 @@
             0 AS popularity_score  -- 인기순과 컬럼 개수 맞추기
         FROM product p
         ORDER BY DBMS_RANDOM.VALUE
-        FETCH FIRST 8 ROWS ONLY
+        --FETCH FIRST 8 ROWS ONLY
     )
+    where rownum between 1 and 8
 </select>
 
 
