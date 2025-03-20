@@ -67,7 +67,7 @@
 <select id="getFilteredItems" resultType="boarddto">
     SELECT * FROM (
         SELECT 
-               p.product_id, p.name, p.description, p.bigcategory, p.subcategory, p.product_region, p.price, p.created_at,
+               p.product_id, p.name, p.description, p.bigcategory, p.subcategory, p.product_region, p.price, p.created_at,  p.image_url,
                COALESCE(v.view_count, 0) AS view_count,
                COALESCE(r.avg_rating, 0) AS avg_rating,
                COALESCE(r.review_count, 0) AS review_count,
@@ -240,7 +240,7 @@
 <select id="getBrand" resultType="boarddto">
     SELECT * FROM (
         SELECT 
-               p.product_id, p.name, p.description, p.bigcategory, p.subcategory, p.product_region, p.price, p.created_at,
+               p.product_id, p.name, p.description, p.bigcategory, p.subcategory, p.product_region, p.price, p.created_at, p.image_url,
                ROW_NUMBER() OVER (
                    <choose>
                        <when test="sortType == 'latest'">
