@@ -24,4 +24,5 @@ public class ReviewDTO {
 	
 	String name; //from product
 	String product_image_url;
+	int brand_id;
 }

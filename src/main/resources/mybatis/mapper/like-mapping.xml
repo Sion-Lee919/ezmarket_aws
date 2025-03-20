@@ -14,7 +14,7 @@
   </delete>
   
   <select id="getLike" resultType="likedto">
-  	select l.*, p.name, p.price, p.image_url, p.alcohol, p.volume, p.description
+  	select l.*, p.name, p.price, p.image_url, p.alcohol, p.volume, p.description, p.brand_id
   	from product p
     join likes l ON p.product_id = l.product_id
     where l.member_id = #{member_id}

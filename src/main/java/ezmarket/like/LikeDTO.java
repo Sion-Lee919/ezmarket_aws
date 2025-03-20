@@ -18,4 +18,5 @@ public class LikeDTO {
     String image_url;
     String alcohol;
     String volume;
+    int brand_id;
 }
