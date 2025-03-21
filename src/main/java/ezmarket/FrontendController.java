@@ -6,8 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class FrontendController {
 
-    @RequestMapping("/**/{path:[^\\.]+}")
+    @RequestMapping(value = { "/", "/**/{[path:[^\\.]*}"} )
     public String forward() {
         return "forward:/index.html";
     }
 }
+
