@@ -401,7 +401,7 @@
 
 
 
-    <select id="selectBrandById" resultType="BrandDTO">
+<!--     <select id="selectBrandById" resultType="BrandDTO">
         SELECT 
             brand_id,
             member_id,
@@ -415,7 +415,7 @@
             TO_CHAR(brand_update_date, 'YYYY-MM-DD') AS brand_update_date
         FROM brand
         WHERE brand_id = #{brand_id}
-    </select>
+    </select> -->
 
 
 
