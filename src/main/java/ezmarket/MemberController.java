@@ -283,7 +283,7 @@ public class MemberController {
 
 	        try {
 	        	//aws 배포후 경로 재설정
-	            String brandLogoFileName = brand_id + "_" + brand_number + "_" + brandLogoFile.getOriginalFilename();
+	            String brandLogoFileName = brandLogoFile.getOriginalFilename();
 	            String brandlogo_url = "C:/ezwel/ezmarketupload/brand/" + "brandlogo/" + brandLogoFileName;
 	            saveFile(brandLogoFile, brandlogo_url);
 	            
