@@ -401,6 +401,22 @@
 
 
 
+    <select id="selectBrandById" resultType="BrandDTO">
+        SELECT 
+            brand_id,
+            member_id,
+            brandname,
+            brandlogo_url,
+            brand_number,
+            brandlicense_url,
+            brand_status,
+            brand_refusal_comment,
+            TO_CHAR(brand_join_date, 'YYYY-MM-DD') AS brand_join_date,
+            TO_CHAR(brand_update_date, 'YYYY-MM-DD') AS brand_update_date
+        FROM brand
+        WHERE brand_id = #{brand_id}
+    </select>
+
 
 
 

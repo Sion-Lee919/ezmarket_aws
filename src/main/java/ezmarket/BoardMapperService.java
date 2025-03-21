@@ -95,6 +95,11 @@ public class BoardMapperService implements BoardService {
         }
         return groupedItems;
 	}
+
+	@Override
+	public BrandDTO getBrandById(int brand_id) {
+		return mapper.selectBrandById(brand_id);
+	}
 	
 	
 

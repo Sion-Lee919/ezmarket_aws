@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -36,6 +37,8 @@ public interface BoardMapper {
 	int getBrandItemsCount(BoardDTO filterCriteria);
 	
 	List<BoardDTO> getItemsByType();
+	
+	 BrandDTO selectBrandById(@Param("brand_id") int brand_id);
 }
 
 

@@ -31,6 +31,8 @@ public interface BoardService {
 	int getBrandItemsCount(BoardDTO filterCriteria);
 	
 	Map<String, List<BoardDTO>> getItemsByType();
+	
+	BrandDTO getBrandById(int brand_id);
 
 }
 

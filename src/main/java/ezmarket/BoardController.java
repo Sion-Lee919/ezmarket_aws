@@ -286,6 +286,13 @@ public class BoardController {
 
 	    return response;
 	}
+	
+	@GetMapping("/{brand_id}")
+    public ResponseEntity<BrandDTO> getBrandInfo(@PathVariable int brand_id) {
+        BrandDTO brand = boardService.getBrandById(brand_id);
+        return brand != null ? ResponseEntity.ok(brand) : ResponseEntity.notFound().build();
+    }
+    
 
 	
 	
