@@ -321,14 +321,14 @@ public class MemberController {
 		    // 파일 다운로드
 		    @GetMapping("/downloadFile")
 		    public void downloadFile(@RequestParam String filename, HttpServletResponse response) throws IOException {
-		        String path = "/home/" + System.getProperty("user.name") + "mydir/ezmarketupload/brandlicense/";  // 파일 경로 설정
+		        String path = "/home/" + System.getProperty("user.name") + "mydir/ezmarketupload/brandlicense/";
 		        File file = new File(path + filename);
 
 		        if (!file.exists()) {
 		            response.sendError(HttpServletResponse.SC_NOT_FOUND, "파일이 존재하지 않습니다.");
 		            return;
 		        }
-
+		        
 		        response.setContentType("application/pdf"); 
 		        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 
@@ -399,14 +399,14 @@ public class MemberController {
 	    
 	    //사용자 강퇴
 	    @PostMapping("/kick")
-		public ResponseEntity<String> kick(@RequestParam("member_id") long member_id, @RequestParam("member_kick_comment") String member_kick_comment) {
+		public ResponseEntity<String> kick(@RequestParam("member_id") int member_id, @RequestParam("member_kick_comment") String member_kick_comment) {
 			memberService.kick(member_id, member_kick_comment);
 	        return ResponseEntity.ok("사용자 강퇴 완료.");
 	    }
 	    
 	    //사용자 복구
 	    @PostMapping("/restore")
-		public ResponseEntity<String> restore(@RequestParam("member_id") long member_id, @RequestParam("member_kick_comment") String member_kick_comment) {
+		public ResponseEntity<String> restore(@RequestParam("member_id") int member_id, @RequestParam("member_kick_comment") String member_kick_comment) {
 			memberService.restore(member_id, member_kick_comment);
 	        return ResponseEntity.ok("사용자 복구 완료.");
 	    }
@@ -420,14 +420,14 @@ public class MemberController {
 	    
 		//판매자 신청 수락
 		@PostMapping("/sellAccept")
-		public ResponseEntity<String> sellAccept(@RequestParam("brand_id") long brand_id) {
+		public ResponseEntity<String> sellAccept(@RequestParam("brand_id") int brand_id) {
 			memberService.sellAccept(brand_id);
 	        return ResponseEntity.ok("판매자 신청 승인.");
 	    }
 		
 		//판매자 신청 거절
 		@PostMapping("/sellRefuse")
-		public ResponseEntity<String> sellRefuse(@RequestParam("brand_id") long brand_id, @RequestParam("brand_refusal_comment") String brand_refusal_comment) {
+		public ResponseEntity<String> sellRefuse(@RequestParam("brand_id") int brand_id, @RequestParam("brand_refusal_comment") String brand_refusal_comment) {
 			memberService.sellRefuse(brand_id, brand_refusal_comment);
 			return ResponseEntity.ok("판매자 신청 거절.");
 		}
