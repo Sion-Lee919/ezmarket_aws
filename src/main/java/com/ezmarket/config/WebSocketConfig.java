@@ -14,6 +14,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+    	System.out.println("WebSocketConfig 1.");
         registry.addEndpoint("/ws")
                 //.setAllowedOrigins("*")
         		.setAllowedOriginPatterns("*/**");
@@ -22,7 +23,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/sub");
+    	System.out.println("WebSocketConfig 2.");
+    	registry.enableSimpleBroker("/sub");
         registry.setApplicationDestinationPrefixes("/pub");
     }
 }
