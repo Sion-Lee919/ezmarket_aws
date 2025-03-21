@@ -103,11 +103,11 @@
 		</select>
 		
 		<!-- 판매자 신청 수락 -->
-		<update id="sellApplicationAccept" parameterType="long">
+		<update id="sellApplicationAccept" parameterType="int">
 			update brand set brand_status = '승인' where brand_id = #{brand_id}
 		</update>
 		
-		<update id="sellApplicationAcceptAuthor" parameterType="long">
+		<update id="sellApplicationAcceptAuthor" parameterType="int">
 			update member m 
 			set m.userauthor = 2
 			where m.member_id in (
@@ -123,7 +123,7 @@
 			update brand set brand_status = '거절', brand_refusal_comment = #{brand_refusal_comment} where brand_id = #{brand_id}
 		</update>
 		
-		<update id="sellApplicationRefuseAuthor" parameterType="long">
+		<update id="sellApplicationRefuseAuthor" parameterType="int">
 			update member m 
 			set m.userauthor = 1
 			where m.member_id in (

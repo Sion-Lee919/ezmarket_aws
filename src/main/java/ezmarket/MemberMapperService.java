@@ -117,13 +117,13 @@ public class MemberMapperService implements MemberService {
 		
 		//사용자 강퇴
 		@Override
-		public void kick(long member_id, String member_kick_comment) {
+		public void kick(int member_id, String member_kick_comment) {
 			mapper.kickMember(member_id, member_kick_comment);
 		}
 		
 		//사용자 복구
 		@Override
-		public void restore(long member_id, String member_kick_comment) {
+		public void restore(int member_id, String member_kick_comment) {
 			mapper.restoreMember(member_id, member_kick_comment);
 		}
 				
@@ -136,14 +136,14 @@ public class MemberMapperService implements MemberService {
 		
 		//판매자 수락
 		@Override
-		public void sellAccept(long brand_id) {
+		public void sellAccept(int brand_id) {
 			mapper.sellApplicationAccept(brand_id);
 			mapper.sellApplicationAcceptAuthor(brand_id);
 		}
 		
 		//판매자 거절
 		@Override
-		public void sellRefuse(long brand_id, String brand_refusal_comment) {
+		public void sellRefuse(int brand_id, String brand_refusal_comment) {
 			mapper.sellApplicationRefuse(brand_id, brand_refusal_comment);
 			mapper.sellApplicationRefuseAuthor(brand_id, brand_refusal_comment);
 		}

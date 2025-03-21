@@ -3,7 +3,9 @@ package ezmarket;
 
 import java.util.ArrayList;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -283,14 +285,16 @@ public class MemberController {
 
 	        try {
 	            String brandLogoFileName = brand_id + "_" + brand_number + "_" + brandLogoFile.getOriginalFilename();
+	            String brandlogo_url = brandLogoFile.getOriginalFilename();
 	            String path_logo = "/home/" + System.getProperty("user.name") + "/mydir/ezmarketupload/" + "brandlogo/";
-	            String brandlogo_url = path_logo + brandLogoFileName;
-	            saveFile(brandLogoFile, brandlogo_url);
+	            String brandlogo_full_url = path_logo + brandLogoFileName;
+	            saveFile(brandLogoFile, brandlogo_full_url);
 	            
 	            String brandLicenseFileName = brand_id + "_" + brand_number + "_" + brandLicenseFile.getOriginalFilename();
+	            String brandlicense_url = brandLicenseFile.getOriginalFilename();
 	            String path_license = "/home/" + System.getProperty("user.name") + "/mydir/ezmarketupload/" + "brandlicense/";
-	            String brandlicense_url = path_license + brandLicenseFileName;
-	            saveFile(brandLicenseFile, brandlicense_url);
+	            String brandlicense_full_url = path_license + brandLicenseFileName;
+	            saveFile(brandLicenseFile, brandlicense_full_url);
 	            
 	            MemberDTO dto = new MemberDTO();
 	            dto.setBrand_id(brand_id);
@@ -312,6 +316,30 @@ public class MemberController {
 		        File destinationFile = new File(path);
 		        destinationFile.getParentFile().mkdirs();
 		        file.transferTo(destinationFile);
+		    }
+		    
+		    // 파일 다운로드
+		    @GetMapping("/downloadFile")
+		    public void downloadFile(@RequestParam String filename, HttpServletResponse response) throws IOException {
+		        String path = "/home/" + System.getProperty("user.name") + "mydir/ezmarketupload/brandlicense/";
+		        File file = new File(path + filename);
+
+		        if (!file.exists()) {
+		            response.sendError(HttpServletResponse.SC_NOT_FOUND, "파일이 존재하지 않습니다.");
+		            return;
+		        }
+		        
+		        response.setContentType("application/pdf"); 
+		        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+
+		        try (FileInputStream inputStream = new FileInputStream(file);
+		             OutputStream outputStream = response.getOutputStream()) {
+		            byte[] buffer = new byte[1024];
+		            int bytesRead;
+		            while ((bytesRead = inputStream.read(buffer)) != -1) {
+		                outputStream.write(buffer, 0, bytesRead);
+		            }
+		        }
 		    }
 		
 		//중복 확인 - 사업자번호
@@ -371,14 +399,14 @@ public class MemberController {
 	    
 	    //사용자 강퇴
 	    @PostMapping("/kick")
-		public ResponseEntity<String> kick(@RequestParam("member_id") long member_id, @RequestParam("member_kick_comment") String member_kick_comment) {
+		public ResponseEntity<String> kick(@RequestParam("member_id") int member_id, @RequestParam("member_kick_comment") String member_kick_comment) {
 			memberService.kick(member_id, member_kick_comment);
 	        return ResponseEntity.ok("사용자 강퇴 완료.");
 	    }
 	    
 	    //사용자 복구
 	    @PostMapping("/restore")
-		public ResponseEntity<String> restore(@RequestParam("member_id") long member_id, @RequestParam("member_kick_comment") String member_kick_comment) {
+		public ResponseEntity<String> restore(@RequestParam("member_id") int member_id, @RequestParam("member_kick_comment") String member_kick_comment) {
 			memberService.restore(member_id, member_kick_comment);
 	        return ResponseEntity.ok("사용자 복구 완료.");
 	    }
@@ -392,14 +420,14 @@ public class MemberController {
 	    
 		//판매자 신청 수락
 		@PostMapping("/sellAccept")
-		public ResponseEntity<String> sellAccept(@RequestParam("brand_id") long brand_id) {
+		public ResponseEntity<String> sellAccept(@RequestParam("brand_id") int brand_id) {
 			memberService.sellAccept(brand_id);
 	        return ResponseEntity.ok("판매자 신청 승인.");
 	    }
 		
 		//판매자 신청 거절
 		@PostMapping("/sellRefuse")
-		public ResponseEntity<String> sellRefuse(@RequestParam("brand_id") long brand_id, @RequestParam("brand_refusal_comment") String brand_refusal_comment) {
+		public ResponseEntity<String> sellRefuse(@RequestParam("brand_id") int brand_id, @RequestParam("brand_refusal_comment") String brand_refusal_comment) {
 			memberService.sellRefuse(brand_id, brand_refusal_comment);
 			return ResponseEntity.ok("판매자 신청 거절.");
 		}

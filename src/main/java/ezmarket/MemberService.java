@@ -54,19 +54,19 @@ public interface MemberService {
 		List<MemberDTO> getAllUsers();
 		
 		//사용자 강퇴
-		void kick(long member_id, String member_kick_comment);
+		void kick(int member_id, String member_kick_comment);
 		
 		//사용자 복구
-		void restore(long member_id, String member_kick_comment);
+		void restore(int member_id, String member_kick_comment);
 				
 		//판매자 목록 가져오기
 		List<MemberDTO> getAllBrands();
 		
 		//판매자 승인
-		void sellAccept(long brand_id);
+		void sellAccept(int brand_id);
 		
 		//판매자 거절
-		void sellRefuse(long brand_id, String brand_refusal_comment);
+		void sellRefuse(int brand_id, String brand_refusal_comment);
 
 		ArrayList<MemberDTO> getBrandAddr();
 }
