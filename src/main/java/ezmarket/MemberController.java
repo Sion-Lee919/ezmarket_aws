@@ -321,7 +321,7 @@ public class MemberController {
 		    // 파일 다운로드
 		    @GetMapping("/downloadFile")
 		    public void downloadFile(@RequestParam String filename, HttpServletResponse response) throws IOException {
-		        String path = "/home/" + System.getProperty("user.name") + "mydir/ezmarketupload/brandlicense/";
+		        String path = "/home/" + System.getProperty("user.name") + "/mydir/ezmarketupload/brandlicense/";
 		        File file = new File(path + filename);
 
 		        if (!file.exists()) {
