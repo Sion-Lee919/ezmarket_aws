@@ -282,14 +282,14 @@ public class MemberController {
 	            @RequestParam("brandlicense_url") MultipartFile brandLicenseFile) {
 
 	        try {
-	        	//aws 배포후 경로 재설정
 	            String brandLogoFileName = brand_id + "_" + brand_number + "_" + brandLogoFile.getOriginalFilename();
-	            String brandlogo_url = "C:/ezwel/ezmarketupload/brand/" + "brandlogo/" + brandLogoFileName;
+	            String path_logo = "/home/" + System.getProperty("user.name") + "/mydir/ezmarketupload/" + "brandlogo/";
+	            String brandlogo_url = path_logo + brandLogoFileName;
 	            saveFile(brandLogoFile, brandlogo_url);
 	            
-	            //aws 배포후 경로 재설정
 	            String brandLicenseFileName = brand_id + "_" + brand_number + "_" + brandLicenseFile.getOriginalFilename();
-	            String brandlicense_url = "C:/ezwel/ezmarketupload/brand/" + "brandlicense/" + brandLicenseFileName;
+	            String path_license = "/home/" + System.getProperty("user.name") + "/mydir/ezmarketupload/" + "brandlicense/";
+	            String brandlicense_url = path_license + brandLicenseFileName;
 	            saveFile(brandLicenseFile, brandlicense_url);
 	            
 	            MemberDTO dto = new MemberDTO();
