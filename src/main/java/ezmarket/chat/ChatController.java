@@ -21,6 +21,7 @@ import com.ezmarket.cookie.JWTUtil;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ChatController {
 	
