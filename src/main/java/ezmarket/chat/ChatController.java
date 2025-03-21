@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class ChatController {
 	
 	@Autowired
@@ -33,7 +32,6 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void sendMessage(ChatDTO chatDto, SimpMessageHeaderAccessor accessor) {
-    	System.out.println("채팅전송 시작");
     	System.out.println("채팅 내용: " + chatDto.getChat());  // 채팅 메시지
         System.out.println("채팅 생성 시간: " + chatDto.getCreated_at());  // 생성 시간
         System.out.println("채널 ID: " + chatDto.getChannel_id());  // 채널 ID
@@ -43,20 +41,17 @@ public class ChatController {
         chatDto.setCreated_at(currentTime);  // ChatDTO에 현재 시간을 설정
     	System.out.println(chatDto.getCreated_at());
         simpMessagingTemplate.convertAndSend("/sub/chat/" + chatDto.getChannel_id(), chatDto);
-        System.out.println("채팅전송 종료");
 
     }
     
     @GetMapping("chatroom/getmemberlistinchatroom")
     public ArrayList<ChatDTO> getMemberListInChatRoom(@RequestParam("productId") int product_id){
-    	System.out.println("chatroom/getmemberlistinchatroom 실행");
     	ArrayList<ChatDTO> dtoList = chatservice.getMemberListInChatRoom(product_id);
     	return dtoList;
     }
     
     @GetMapping("/chat/records")
     public ResponseEntity<ArrayList<ChatDTO>> getChatHistory(@RequestParam String channelId) {
-    	System.out.println("/chat/records 실행");
     	ArrayList<ChatDTO> chatHistory = chatservice.getChatHistory(channelId);
         return ResponseEntity.ok(chatHistory);
     }
@@ -64,7 +59,6 @@ public class ChatController {
     //Member Part
     @GetMapping("/getMyChat")
     public ResponseEntity<ArrayList<ChatDTO>> getMyChat(@RequestHeader("Authorization") String token) {
-    	System.out.println("/getMyChat 실행");
     	int member_id = JWTUtil.validateAndGetMemberId(token.replace("Bearer ", ""));
     	
     	ArrayList<ChatDTO> myChat = chatservice.getMyChat(member_id);
