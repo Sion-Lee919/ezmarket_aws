@@ -285,13 +285,13 @@ public class MemberController {
 
 	        try {
 	            String brandLogoFileName = brand_id + "_" + brand_number + "_" + brandLogoFile.getOriginalFilename();
-	            String brandlogo_url = brandLogoFile.getOriginalFilename();
+	            String brandlogo_url = brand_id + "_" + brand_number + "_" + brandLogoFile.getOriginalFilename();
 	            String path_logo = "/home/" + System.getProperty("user.name") + "/mydir/ezmarketupload/" + "brandlogo/";
 	            String brandlogo_full_url = path_logo + brandLogoFileName;
 	            saveFile(brandLogoFile, brandlogo_full_url);
 	            
 	            String brandLicenseFileName = brand_id + "_" + brand_number + "_" + brandLicenseFile.getOriginalFilename();
-	            String brandlicense_url = brandLicenseFile.getOriginalFilename();
+	            String brandlicense_url = brand_id + "_" + brand_number + "_" + brandLicenseFile.getOriginalFilename();
 	            String path_license = "/home/" + System.getProperty("user.name") + "/mydir/ezmarketupload/" + "brandlicense/";
 	            String brandlicense_full_url = path_license + brandLicenseFileName;
 	            saveFile(brandLicenseFile, brandlicense_full_url);
