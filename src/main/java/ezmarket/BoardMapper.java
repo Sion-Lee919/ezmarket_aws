@@ -38,7 +38,7 @@ public interface BoardMapper {
 	
 	List<BoardDTO> getItemsByType();
 	
-	 BrandDTO selectBrandById(@Param("brand_id") int brand_id);
+	 BrandDTO getBrandById(@Param("brand_id") int brand_id);
 }
 
 

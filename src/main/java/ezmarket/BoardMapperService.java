@@ -98,7 +98,7 @@ public class BoardMapperService implements BoardService {
 
 	@Override
 	public BrandDTO getBrandById(int brand_id) {
-		return mapper.selectBrandById(brand_id);
+		return mapper.getBrandById(brand_id);
 	}
 	
 	
