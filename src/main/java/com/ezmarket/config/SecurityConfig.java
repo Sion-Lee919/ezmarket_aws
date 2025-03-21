@@ -35,8 +35,6 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // OPTIONS 요청 허용
-                .requestMatchers("/", "/index.html", "/static/**", "/favicon.ico", "/**/*.js", "/**/*.css", "/**/*.png").permitAll()
-                .requestMatchers("/item/**", "/category/**", "/product/**").permitAll()
                 .anyRequest().permitAll()
             )
             .exceptionHandling(exception -> exception
