@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class FrontendController {
 
-    @RequestMapping(value = "/**/{[path:[^\\.]*}")
+	@RequestMapping(value = "/**/{path:[^\\.]*}")
     public String redirect(HttpServletRequest request) {
         String uri = request.getRequestURI();
 
