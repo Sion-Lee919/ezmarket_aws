@@ -70,6 +70,23 @@ public class SecurityConfig {
                     response.setHeader("Authorization", "Bearer " + token);  
                     response.sendRedirect("http://13.208.47.23:8911");
                 })
+            )
+            .headers(headers -> headers
+                    .contentSecurityPolicy(csp -> csp
+                        .policyDirectives("default-src 'self'; "
+                        		+ "script-src 'self' "
+                        		+ "'unsafe-inline' https://trusteddomain.com; "
+                        		+ "style-src 'self'; "
+                        		+ "img-src 'self' https://trusteddomain.com; "
+                        		+ "font-src 'self'; "
+                        		+ "object-src 'none'; "
+                        		+ "media-src 'self'; "
+                        		+ "frame-ancestors 'none';")
+                    )
+                    .httpStrictTransportSecurity(hsts -> hsts.maxAgeInSeconds(31536000).includeSubDomains(true))
+                    .addHeaderWriter((request, response) -> response.setHeader("Date", ""))
+                    .addHeaderWriter((request, response) -> response.addHeader("X-Content-Type-Options", "nosniff"))
+                    .addHeaderWriter((request, response) -> response.addHeader("X-Frame-Options", "DENY"))
             );
         
         return http.build();
