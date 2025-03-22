@@ -369,9 +369,11 @@ public class MemberController {
 	            	String brandlogo_url = null;
 	                if (brandLogoFile != null && !brandLogoFile.isEmpty()) {
 	                    String brandLogoFileName = brand_id + "_" + brand_number + "_" + brandLogoFile.getOriginalFilename();
-	                    brandlogo_url = "C:/ezwel/ezmarketupload/brand/brandlogo/" + brandLogoFileName;
+	                    String path_logo = "/home/" + System.getProperty("user.name") + "/mydir/ezmarketupload/" + "brandlogo/";
+	                    brandlogo_url =  brandLogoFileName;
+	                    String brandlogo_full_url = path_logo + brandLogoFileName;
 	                    try {
-	                        saveFile(brandLogoFile, brandlogo_url);
+	                        saveFile(brandLogoFile, brandlogo_full_url);
 	                    } catch (IOException e) {
 	                        return ResponseEntity.status(500).body("파일 저장 중 오류 발생");
 	                    }
