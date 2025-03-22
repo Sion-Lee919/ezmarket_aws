@@ -286,6 +286,21 @@ public class BoardController {
 
 	    return response;
 	}
+	
+	@GetMapping("/brand/logo/{brand_id}")
+	public ResponseEntity<Map<String, String>> getBrandLogo(@PathVariable int brand_id) {
+	    BrandDTO brand = boardService.getBrandById(brand_id);
+	    
+	    if (brand != null && brand.getBrandlogo_url() != null && !brand.getBrandlogo_url().isBlank()) {
+	        Map<String, String> response = new HashMap<>();
+	        response.put("logo_filename", brand.getBrandlogo_url());
+	        return ResponseEntity.ok(response);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
+    
 
 	
 	

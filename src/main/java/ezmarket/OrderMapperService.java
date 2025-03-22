@@ -150,6 +150,19 @@ public class OrderMapperService {
             throw e;
         }
     }
+    
+    public List<OrderDTO> getAllOrders(){
+    	try {
+            List<OrderDTO> order = orderMapper.getAllOrders();
+            System.out.println("조회된 주문 수: " + order);
+            
+            return order;
+        } catch (Exception e) {
+            System.err.println("주문 목록 조회 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
 
     public OrderDTO getLastOrderByMemberId(int memberId) {
         try {
@@ -179,10 +192,22 @@ public class OrderMapperService {
         }
     }
     
+    public OrderDTO getOrderByOrderId(int orderId) {
+
+        try {
+            return orderMapper.getOrderByOrderId(orderId);
+        } catch (Exception e) {
+            System.err.println("주문 상세 조회 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+    
 
     @Transactional
     public void updateOrderStatus(int orderId, String status) {
         try {
+        	System.out.println("!!!!" + status);
             System.out.println("주문 상태 업데이트 시작: orderId=" + orderId + ", 새 상태=" + status);
             orderMapper.updateOrderStatus(orderId, status);
             System.out.println("주문 상태 업데이트 완료");
