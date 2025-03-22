@@ -17,17 +17,18 @@ public class FrontendController {
 
         // WebSocket 경로는 무시
         if (uri.startsWith("/ws")) {
-            return null;  // forward 하지 않음
+            return null;
         }
 
-        // 실제 index.html이 존재할 경우에만 forward
-        if (new ClassPathResource("/static/index.html").exists()) {
-            return "forward:/static/index.html";
+        // index.html 존재 확인 후 forward
+        if (new ClassPathResource("static/index.html").exists()) {
+            return "forward:/index.html";
         } else {
             return new ModelAndView("error/404");
         }
     }
 }
+
 
 
 
