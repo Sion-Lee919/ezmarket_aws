@@ -1,7 +1,6 @@
 package ezmarket;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,13 +12,14 @@ public class FrontendController {
     public String forward(HttpServletRequest request) {
         String uri = request.getRequestURI();
 
-        // WebSocket 경로는 제외
+        // ws로 시작하면 React index.html로 포워딩하지 않음
         if (uri.startsWith("/ws")) {
-            return null; // 더 이상 포워딩 안 함 → WebSocket 핸들러로 빠짐
+            return "forward:"; 
         }
 
         return "forward:/index.html";
     }
 }
+
 
 
