@@ -13,8 +13,8 @@ public class FrontendController {
     public Object redirect(HttpServletRequest request) {
         String uri = request.getRequestURI();
 
-        if (uri.startsWith("/ws")) {
-            return ResponseEntity.notFound().build(); // view resolver 타지 않게 명확히
+        if (uri.startsWith("/ws") || uri.startsWith("/api") || uri.startsWith("/static") || uri.startsWith("/resources")) {
+            return ResponseEntity.notFound().build();
         }
 
         return "forward:/index.html";

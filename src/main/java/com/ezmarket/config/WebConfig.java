@@ -22,4 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
         // "/"만 index.html로 매핑
         registry.addViewController("/").setViewName("forward:/index.html");
     }
+    
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        configurer.setUseTrailingSlashMatch(false);
+    }
 }
