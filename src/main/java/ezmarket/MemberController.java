@@ -42,10 +42,10 @@ public class MemberController {
 		//회원가입
 	    @PostMapping("/joinN")
 	    public String join(@RequestBody MemberDTO dto) {
-	    	/* BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	    	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	    	
 	    	String hashedPassword = passwordEncoder.encode(dto.getPassword());
-	    	dto.setPassword(hashedPassword); */
+	    	dto.setPassword(hashedPassword);
 	    	
 	        String result = memberService.joinMember(dto);
 	        return "redirect:login";
@@ -89,11 +89,9 @@ public class MemberController {
 	    public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO, HttpServletResponse response) {
 	        MemberDTO dto = memberService.getMember(memberDTO.getUsername());
 	        
-	        /* BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	        
-
-	        if (dto != null && passwordEncoder.matches(memberDTO.getPassword(), dto.getPassword())) { */
-	        if (dto != null && memberDTO.getPassword().equals(dto.getPassword())) {
+	        if (dto != null && passwordEncoder.matches(memberDTO.getPassword(), dto.getPassword())) {
 	        	
 	        	//회원 탈퇴 -> 로그인 불가
 	        	if(!"정상".equals(dto.getMember_status())) {
@@ -153,7 +151,7 @@ public class MemberController {
             }
         }
         
-        //비밀번호 찾기 -> 일단은 정보들 다 확인되면 재설정되게 -> 가능하면 이메일 인증 API 넣기[넣는다면 회원가입도](아이디, 이메일 동일한 경우)
+        //비밀번호 찾기
         @PostMapping("/findPw")
         public ResponseEntity<?> findPw(@RequestBody Map<String, String> requestBody) {
             String username = requestBody.get("username");
@@ -180,11 +178,10 @@ public class MemberController {
             String username = requestBody.get("username");
             String newPassword = requestBody.get("newPassword");
             
-            /* BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String hashedPassword = passwordEncoder.encode(newPassword);
             
-            boolean isUpdated = memberService.resetPw(username, hashedPassword); */
-            boolean isUpdated = memberService.resetPw(username, newPassword); 
+            boolean isUpdated = memberService.resetPw(username, hashedPassword);
             
             if (isUpdated) {
                 Map<String, String> responseBody = new HashMap<>();
@@ -232,9 +229,9 @@ public class MemberController {
 		        String username = JWTUtil.validateAndGetUserId(token);
 
 		        if (username != null && memberDTO.getUsername().equals(username)) {
-		        	/* BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		        	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		            String hashedPassword = passwordEncoder.encode(memberDTO.getPassword());
-		            memberDTO.setPassword(hashedPassword); */
+		            memberDTO.setPassword(hashedPassword);
 		                  
 		            memberService.modify(memberDTO.getUsername(), memberDTO.getPassword(), memberDTO.getNickname(), memberDTO.getPhone(), memberDTO.getAddress());
 		            return ResponseEntity.ok("회원 정보가 수정되었습니다.");
