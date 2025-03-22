@@ -19,8 +19,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // "/"만 index.html로 매핑
-        registry.addViewController("/").setViewName("forward:/index.html");
+        // 정적 리소스, API 제외한 나머지는 모두 index.html로 포워딩
+        registry.addViewController("/{spring:[^\\.]*}")
+                .setViewName("forward:/index.html");
+        registry.addViewController("/**/{spring:[^\\.]*}")
+                .setViewName("forward:/index.html");
     }
     
     @Override
