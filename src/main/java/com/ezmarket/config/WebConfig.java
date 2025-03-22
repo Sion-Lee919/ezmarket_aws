@@ -1,6 +1,7 @@
 package com.ezmarket.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -18,5 +19,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         // "/" 요청 시 index.html 반환
         registry.addViewController("/").setViewName("forward:/index.html");
+    }
+    
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        // WebSocket 경로 제외
+        configurer.addPathPrefix("/ws", c -> false); // ❗ 이 설정이 중요!
     }
 }
