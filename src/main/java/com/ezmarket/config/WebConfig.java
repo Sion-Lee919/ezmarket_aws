@@ -14,9 +14,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/");
     }
     
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        // "/" 요청 시 index.html 반환
-//        registry.addViewController("/").setViewName("forward:/index.html");
-//    }
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        // "/" 요청 시 index.html 반환
+        registry.addViewController("/").setViewName("forward:/index.html");
+    }
 }
