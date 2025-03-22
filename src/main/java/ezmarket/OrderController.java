@@ -200,8 +200,8 @@ public class OrderController {
  						return ResponseEntity.badRequest().body("해당 주문을 찾을 수 없습니다.");
  					}
 
- 					orderMapperService.updateOrderStatus(orderId, "반품중");
- 					System.out.println("주문 상태가 반품중으로 업데이트되었습니다. orderId: " + orderId);
+ 					orderMapperService.updateOrderStatus(orderId, "반품 신청중");
+ 					System.out.println("주문 상태가 반품신청중으로 업데이트되었습니다. orderId: " + orderId);
 
  					Map<String, Object> response = new HashMap<>();
  					response.put("result", "success");
