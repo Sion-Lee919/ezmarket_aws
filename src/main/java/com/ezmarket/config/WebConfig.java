@@ -22,17 +22,4 @@ public class WebConfig implements WebMvcConfigurer {
         // "/"만 index.html로 매핑
         registry.addViewController("/").setViewName("forward:/index.html");
     }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns("*")
-                .allowedMethods("*");
-    }
-
-    @Override
-    public void configurePathMatch(PathMatchConfigurer configurer) {
-        // WebSocket 경로(/ws)는 정적 라우팅 제외
-        configurer.setUseTrailingSlashMatch(true);
-    }
 }
